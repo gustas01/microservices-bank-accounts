@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gustavo.microservices</groupId>
-	<artifactId>msusers</artifactId>
+	<artifactId>msclients</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>msusers</name>
-	<description>Discovery Server Eureka</description>
+	<name>msclients</name>
+	<description>Microservice for clients management</description>
 	<url/>
 	<licenses>
 		<license/>

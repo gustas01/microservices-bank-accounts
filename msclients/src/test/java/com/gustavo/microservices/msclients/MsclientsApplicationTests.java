@@ -1,10 +1,10 @@
-package com.gustavo.microservices.msusers;
+package com.gustavo.microservices.msclients;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsusersApplicationTests {
+class MsclientsApplicationTests {
 
 	@Test
 	void contextLoads() {

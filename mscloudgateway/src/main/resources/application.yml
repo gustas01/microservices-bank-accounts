@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: mscloudgateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+server:
+  port: ${SERVER_PORT}
+eureka:
+  client:
+    service-url:
+      default-Zone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}

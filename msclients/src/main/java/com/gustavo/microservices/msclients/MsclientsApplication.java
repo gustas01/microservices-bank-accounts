@@ -1,13 +1,13 @@
-package com.gustavo.microservices.msusers;
+package com.gustavo.microservices.msclients;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MsusersApplication {
+public class MsclientsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsusersApplication.class, args);
+		SpringApplication.run(MsclientsApplication.class, args);
 	}
 
 }
