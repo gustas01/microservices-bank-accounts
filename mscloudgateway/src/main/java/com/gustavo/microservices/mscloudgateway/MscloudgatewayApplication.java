@@ -20,6 +20,7 @@ public class MscloudgatewayApplication {
 		return builder.routes()
 						.route(r -> r.path("/clients/**").uri("lb://msclients"))
 						.route(r -> r.path("/accounts/**").uri("lb://msaccounts"))
+						.route(r -> r.path("/payments/**").uri("lb://mspayments"))
 						.build();
 	}
 }
