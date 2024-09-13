@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: mstransactions
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+  jpa:
+    database-platform: ${DATABASE_DIALECT}
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: ${SERVER_PORT}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME}
