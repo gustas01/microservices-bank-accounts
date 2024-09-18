@@ -23,10 +23,10 @@ public record CreateClientDTO(
         @NotNull(message = "A senha é obrigatória")
         String password,
 
-        @NotNull(message = "O CPF é obrigatória")
+        @NotNull(message = "O CPF é obrigatório")
         String cpf,
 
-        @NotNull(message = "O endereço é obrigatória")
+        @NotNull(message = "O endereço é obrigatório")
         String address
   ) {
   public Client toEntity(){
