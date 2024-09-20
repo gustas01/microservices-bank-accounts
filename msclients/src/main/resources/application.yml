@@ -12,6 +12,14 @@ spring:
   threads:
     virtual:
       enabled: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+mq:
+  queues:
+    client-notifications: ${RABBITMQ_QUEUE_NAME}
 server:
   port: ${SERVER_PORT}
 eureka:
@@ -21,3 +29,5 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     hostname: ${EUREKA_INSTANCE_HOSTNAME}
+
+
