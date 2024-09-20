@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -35,16 +36,23 @@ public class Client {
   @Column(nullable = false)
   private String address;
 
-  public Client(String firstName, String lastName, String email, String password, String cpf, String address) {
+  @Column(nullable = false)
+  private LocalDate birth;
+
+  @Column
+  private Boolean active = true;
+
+  public Client(String firstName, String lastName, String email, String password, String cpf, String address, LocalDate age) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.cpf = cpf;
     this.address = address;
+    this.birth = age;
   }
 
   public ClientDTO toDTO(){
-    return new ClientDTO(firstName, lastName, email, cpf, address);
+    return new ClientDTO(firstName, lastName, email, cpf, address, birth);
   }
 }
