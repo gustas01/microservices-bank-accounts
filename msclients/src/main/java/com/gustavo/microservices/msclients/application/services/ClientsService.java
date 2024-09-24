@@ -1,15 +1,17 @@
 package com.gustavo.microservices.msclients.application.services;
 
-import com.gustavo.microservices.msclients.adapters.DTOs.ClientDTO;
-import com.gustavo.microservices.msclients.adapters.DTOs.PayloadQueueMessageDTO;
-import com.gustavo.microservices.msclients.adapters.DTOs.UpdateClientDTO;
+import com.gustavo.microservices.msclients.adapters.DTOs.*;
 import com.gustavo.microservices.msclients.domain.entities.Client;
+import com.gustavo.microservices.msclients.infra.clients.MsAccountsClient;
 import com.gustavo.microservices.msclients.infra.mqueue.ClientNotificationsPublisher;
 import com.gustavo.microservices.msclients.infra.repositories.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,14 +22,24 @@ public class ClientsService {
   private final ClientRepository clientRepository;
   private final PasswordEncoder passwordEncoder;
   private final ClientNotificationsPublisher publisher;
+  private final MsAccountsClient msAccountsClient;
 
   public ClientDTO register(Client client){
     client.setPassword(passwordEncoder.encode(client.getPassword()));
     Client newClient = clientRepository.save(client);
+
     PayloadQueueMessageDTO payloadQueueMessageDTO = new PayloadQueueMessageDTO(
             client.getEmail(), "Notificação da sua conta",
             "Conta client criada com sucesso!.");
+
+    AccountDataRequest accountDataRequest = new AccountDataRequest("SAVINGSACCOUNT", 1);
+    ResponseEntity<AccountDataResponse> accountDataResponse = msAccountsClient.create(newClient.getId().toString(), accountDataRequest);
+
+    if (accountDataResponse.getStatusCode() != HttpStatus.CREATED)
+      throw new RuntimeException();
+
     publisher.sendMessage(payloadQueueMessageDTO);
+
     return newClient.toDTO();
   }
 

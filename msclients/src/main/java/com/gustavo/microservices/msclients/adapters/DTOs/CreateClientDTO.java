@@ -35,7 +35,7 @@ public record CreateClientDTO(
         @NotEmpty(message = "O endereço não poder estar vazio")
         String address,
 
-        @NotNull(message = "A idade é obrigatória")
+        @NotNull(message = "A data de nascimento é obrigatória")
 //        @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate birth
   ) {

@@ -1,6 +1,7 @@
 package com.gustavo.microservices.msclients.adapters.DTOs;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public record ClientDTO(
         String firstName,
@@ -8,6 +9,7 @@ public record ClientDTO(
         String email,
         String cpf,
         String address,
-        LocalDate birth
+        LocalDate birth,
+        ArrayList<AccountDataResponse> accounts
   )
 {}
