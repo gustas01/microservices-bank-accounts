@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public record StandardErrorResponseDTO (
         LocalDateTime timestamp,
         Integer status,
-        String error,
         Object message
   )
 {}

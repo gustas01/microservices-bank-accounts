@@ -1,8 +1,8 @@
 package com.gustavo.microservices.msclients.adapters.handlers;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.gustavo.microservices.msclients.adapters.DTOs.StandardErrorResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,7 +21,6 @@ public class ExceptionsHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<StandardErrorResponseDTO> validations(MethodArgumentNotValidException e){
-    String error = "Bad request";
     HttpStatus status = HttpStatus.BAD_REQUEST;
 
     List<String> errors = new LinkedList<>();
@@ -30,26 +29,33 @@ public class ExceptionsHandler {
     for (String s : errorsMsg)
       errors.add(s.split(": ")[1]);
 
-    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), error, errors);
+    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), errors);
     return ResponseEntity.status(status).body(err);
   }
 
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<StandardErrorResponseDTO> entityNotFound(EntityNotFoundException e){
-    String error = "Resource not found";
     HttpStatus status = HttpStatus.NOT_FOUND;
-    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), error, e.getMessage());
+    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), e.getMessage());
     return ResponseEntity.status(status).body(err);
   }
 
-  @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-    // Verifica se a causa foi um problema de parsing de data
-    Throwable cause = ex.getCause();
-    if (cause.getCause() instanceof DateTimeParseException) {
-      return new ResponseEntity<>("Formato de data inválido. O formato esperado é yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler(DateTimeParseException.class)
+  public ResponseEntity<StandardErrorResponseDTO> handleHttpMessageNotReadableException(DateTimeParseException ex) {
+    String message = "Formato de data inválido. O formato esperado é yyyy-MM-dd.";
+    HttpStatus status = HttpStatus.BAD_REQUEST;
 
-    return new ResponseEntity<>("Erro ao processar a requisição.", HttpStatus.BAD_REQUEST);
+    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), message);
+    return ResponseEntity.status(status).body(err);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<StandardErrorResponseDTO> handleConstraintViolationException(DataIntegrityViolationException e){
+    String message = "";
+    if(e.getMessage().contains("(cpf)=")) message = "CPF já cadastrado!";
+    else message = "Email já cadastrado!";
+    HttpStatus status = HttpStatus.CONFLICT;
+    StandardErrorResponseDTO err = new StandardErrorResponseDTO(LocalDateTime.now(), status.value(), message);
+    return ResponseEntity.status(status).body(err);
   }
 }
