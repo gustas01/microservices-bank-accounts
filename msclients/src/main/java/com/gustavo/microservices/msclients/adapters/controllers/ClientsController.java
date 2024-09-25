@@ -7,6 +7,7 @@ import com.gustavo.microservices.msclients.application.services.ClientsService;
 import com.gustavo.microservices.msclients.domain.entities.Client;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +34,10 @@ public class ClientsController {
   @PostMapping("/login")
   public ResponseEntity<ClientDTO> login(@RequestBody @Valid LoginDTO loginDTO){
     return null;
+  }
+
+  @GetMapping("me/data/{clientId}")
+  public ResponseEntity<ClientDTO> me(@PathVariable String clientId){
+    return ResponseEntity.status(HttpStatus.OK).body(clientsService.findOne(clientId));
   }
 }

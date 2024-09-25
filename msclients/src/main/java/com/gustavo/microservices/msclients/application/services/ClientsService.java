@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -36,7 +37,7 @@ public class ClientsService {
     ResponseEntity<AccountDataResponse> accountDataResponse = msAccountsClient.create(newClient.getId().toString(), accountDataRequest);
 
     if (accountDataResponse.getStatusCode() != HttpStatus.CREATED)
-      throw new RuntimeException();
+      throw new RuntimeException("Erro ao criar conta!");
 
     publisher.sendMessage(payloadQueueMessageDTO);
 
@@ -65,4 +66,10 @@ public class ClientsService {
     clientRepository.save(client);
   }
 
+
+  public ClientDTO findOne(String clientId){
+    Client client = clientRepository.findById(UUID.fromString(clientId)).orElseThrow(() -> new EntityNotFoundException("Cliente inexistente!"));
+    ResponseEntity<List<AccountDataResponse>> accounts = msAccountsClient.findAllByClientId(clientId);
+    return new ClientDTO(client.getFirstName(), client.getLastName(), client.getEmail(), client.getCpf(), client.getAddress(), client.getBirth(), accounts.getBody());
+  }
 }
